@@ -1,0 +1,142 @@
+---
+title: "Weather Check"
+author: "Gavin McNicol"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    toc: yes
+    toc_float: yes
+---
+
+In this mini analysis we work with the data used in the FiveThirtyEight story titled ["Where People Go to Check the Weather"](https://fivethirtyeight.com/features/weather-forecast-news-app-habits/).
+The Github source for the data and variables descriptions are [here](https://github.com/fivethirtyeight/data/tree/master/weather-check).
+
+Your task is to fill in the blanks denoted by `___` (blank) in the main text and in the code chunks.
+
+To allow you to knit the document before you have filled in the `___` (blanks), I have used `#` to "comment-out" some lines and chunks of code.
+
+## Data and packages
+
+We start with loading the packages we'll use.
+
+```{r load-packages, message=FALSE}
+library(fivethirtyeight)
+library(tidyverse)
+```
+
+The dataset contains Survey Monkey Poll results from April 6 to April 10, 2015, on where `r nrow(weather_check)` people go to check the weather forecast.
+Only `r sum(weather_check$ck_weather == TRUE)/nrow(weather_check)*100`% of respondents checked the weather daily.
+
+```{r}
+weather_check_daily <- weather_check %>% 
+  filter(ck_weather == TRUE)
+```
+
+There are `___` respondents who check the weather daily.
+
+The `weather_check` variables we'll focus on are the following:
+
+-   `weather_source`: One of "The Weather Channel", "Local TV News", "Radio weather", "Internet search", "The default weather app on your phone", "Newsletter", "Newspaper", "A specific website or app (please provide the answer)"
+
+*Notice that if the last option "A specific website or app" is selected, then the respondent must provide a written answer which gets saved in* `weather_source_site`
+
+-   `age`: Age range of respondent (18-29, 30-44, 45-59, 60+)
+
+-   `hhold_income`: Response to "How much total combined money did all members of your household earn last year?"
+
+And we'll also use the `region` and `female` variable for **grouping**.
+
+## Analysis
+
+Let's take a look at the different `weather_source` responses, and how frequently each of them appeared:
+
+```{r message = FALSE}
+weather_check_daily %>%
+  group_by(weather_source) %>%
+  summarise(weather_source_count = n()) 
+```
+
+Next, let's take a look at the different `weather_source_site` responses (which site respondents used if they used "a specific website or app").
+Once you complete and run the code chunk below, what do you notice about the written responses that relates to the goals of this course?
+(Hint: Are these data responses in a standard format?)
+
+```{r message = FALSE}
+# weather_check_daily %>%
+#   group_by(___) %>%
+#   summarise(weather_source_count = n())
+```
+
+Next, we might wonder how the `weather_source` varies with `age` range of the respondent:
+
+```{r}
+# weather_check_daily %>%
+#   group_by(___, ___) %>%
+#   summarise(weather_source_count = n())
+```
+
+Notice that creating these count summaries of the data is fast, and can be done with just one or two lines of code!
+
+Next, we might wonder how the `weather_source` varies with `hhold_income` range of the respondent:
+
+```{r}
+# weather_check_daily %>%
+#   group_by(___, ___) %>%
+#   summarise(weather_source_count = n())
+```
+
+There are `___` combinations of responses here so it's hard to see which combinations are most frequent.
+
+We can arrange the responses from most frequent to least frequent using:
+
+```{r}
+# weather_check_daily %>%
+#   group_by(___, ___) %>%
+#   summarise(weather_source_count = n()) %>% 
+#   arrange(desc(___))
+```
+
+You might also ask whether use of a particular weather source varies between male and female respondents.
+
+First, let's assign the frequency data (using `<-`) we need as a new object called `weather_check_female_counts`:
+
+```{r message = FALSE}
+weather_check_female_counts <- weather_check_daily %>%
+  group_by(female, weather_source) %>%
+  summarise(weather_source_count = n())
+```
+
+Next, let's pass the new data object to a the `ggplot` plotting function: Remove the `#`s (i.e. uncomment the code) and complete the code chunk below:
+
+```{r warning = FALSE}
+# ggplot(data = ___, 
+#        mapping = aes(x = weather_source, y = weather_source_count, color = female)) +
+#   geom_point() +
+#   labs(title = "Weather source vs. respondent female",
+#        x = "Weather source",
+#        y = "___",
+#        color = "Female") +
+#   coord_flip()
+```
+
+What about patterns with age?
+
+First, we the code chunk below will create the object `weather_check_age_counts`, which summarizes the `weather_source` by the `age` grouping variable.
+
+```{r message = FALSE}
+weather_check_age_counts <- weather_check_daily %>%
+  group_by(age, weather_source) %>%
+  summarise(weather_source_count = n())
+```
+
+Next, remove the `#`s (i.e. uncomment the code) and complete the code chunk below to visualize the data and assign colors based on `age` groups.
+
+```{r warning = FALSE}
+# ggplot(data = weather_check_age_counts,
+#        mapping = aes(x = weather_source, y = weather_source_count, color = ___)) +
+#   geom_point() +
+#   labs(title = "Weather source vs. age",
+#        x = "Weather source",
+#        y = "___",
+#        color = "age") +
+#   coord_flip()
+```
